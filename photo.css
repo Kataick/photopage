@@ -62,7 +62,8 @@
     text-align: center;
     background-color: #000;
     border-radius: 30px;
-    cursor: default}
+    cursor: default;
+    pointer-events:none}
 :root .xl-photospage-state{
     background-color: rgba(0,0,0,0.5);
 }
@@ -79,7 +80,7 @@
     position: relative;
 	display: inline-block;
 	opacity: 0;
-    cursor: move;
+    cursor: default;
     user-select: none}
 :root .xl-photospage-img img{
     cursor: url("../img/grabhand.cur"),move}

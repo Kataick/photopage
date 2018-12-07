@@ -1,5 +1,5 @@
 /**
- * photo.js v2.1.6
+ * photo.js v2.1.7
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
@@ -15,7 +15,7 @@ $(function (){
     var getexitfullscreen=function (){
         return document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
     };
-    $xlphotoli.each(function(i){
+    $xlphotoli.each(function (i){
         $xlphoto=$(this).find('h1'),$xlphotouser=$(this).find('a');
         xlphoto[i]=[$xlphoto.prev().find('img')[0].src,$xlphoto.text(),$xlphoto.next().text(),$xlphotouser.parent().prev()[0].src,$xlphotouser.text(),$xlphotouser.parent().next().text()];
         xlchoosecontent+='<li><a><img src="'+ xlphoto[i][0] +'" /></a></li>';
@@ -25,7 +25,7 @@ $(function (){
     for(var i=0;i<xlicon.length;i++){
         i<8 ? xltoolbar+='<a class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'" title="'+ xlicontitle[i] +'"></a>' : xlhandletab+='<li title="'+ xlicontitle[i] +'"><a class="xl-photospage-tab-btn xl-photospage-'+ xlicon[i] +'-btn"><i class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'"></i></a></li>';
     }
-    $xlphotoli.find('.xl-photo-img').on('click',function(){
+    $xlphotoli.find('.xl-photo-img').on('click',function (){
         xlimgindex = $(this).parent().index(),xlrotater = 0,xlphotolength=xlphoto.length,xlbtndisabled='xl-photospage-imgdisabled';
         html.css('overflow','hidden').not('html').append('<div id="xl-mask" class="xl-mask"></div><div id="xl-photospage" class="xl-photospage"><div class="xl-photospage-main"></div></div>'); 
         $xlMask=$('#xl-mask');$xlPhotospage=$('#xl-photospage'),$xlphotospageMain=$xlPhotospage.find('div.xl-photospage-main');
@@ -46,7 +46,7 @@ $(function (){
                     $xlphotospageChoose.parent().parent().hide();
             }
         }
-        if($.browser.msie&&($.browser.version <= '9.0')||($.browser.msie&&$.browser.version === '10.0'))
+        if(!getreqfullscreen())
             $xlImgoriginal.next().hide();
         var resizeLayout=function (){
             xlimgareawidth=win.width()-500,xlimgareaheight=win.height()-50,xlimgwidth=$xlphotospageImg.width(),xlimgheight=$xlphotospageImg.height();
@@ -85,10 +85,7 @@ $(function (){
             choosemaxpageImg(xlchoosemaxpage,xlchoosepage);
         };
         var stateImg=function (text){
-            // if(!$xlphotospageState.is(':animated'))
-                $xlphotospageState.text(text).css('left',xlimgareawidth/2-$xlphotospageState.width()/2-20).fadeTo(100,1,function(){setTimeout(function(){$xlphotospageState.fadeOut(1000)},1000)});
-            // if(!$xlphotospageState.is(':animated'))
-            //     $xlphotospageState.text(text).css('left',xlimgareawidth/2-$xlphotospageState.width()/2-20).stop(true,false).fadeTo(100,1,function(){setTimeout(function(){$xlphotospageState.stop(true,false).fadeOut(500)},500)});
+            $xlphotospageState.text(text).css('left',xlimgareawidth/2-$xlphotospageState.width()/2-20).stop().show().delay(1500).hide(0);
             if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
                 $xlphotospageState.css('left',xlimgareawidth+50/2-$xlphotospageState.width()/2-20);
             }
@@ -204,7 +201,7 @@ $(function (){
             choosemaxpageImg(xlchoosemaxpage,xlchoosepage);
         };
         processImg();
-        $xlphotospageImg.on('mousedown',function(e){
+        $xlphotospageImg.on('mousedown',function (e){
             if(e.button===0){
                 ismove=true;
                 $(this).parent().css('background','#000');
@@ -214,30 +211,26 @@ $(function (){
                     xlimgx = e.originalEvent.pageX - $xlphotospageImg.position().left,xlimgy = e.originalEvent.pageY - $xlphotospageImg.position().top
                 else
                     xlimgx = e.originalEvent.pageX - $xlphotospageImg.offset().left,xlimgy = e.originalEvent.pageY - $xlphotospageImg.offset().top;
-                dom.bind('mousemove',function(e){
+                dom.on('mousemove',function (e){
                     if(xlismove){
                         var xlimgleft=$xlphotospageImg.position().left,xlimgtop=$xlphotospageImg.position().top;
-                        if(xlimgtop<-xlimgheight+30||xlimgleft<-xlimgwidth+30||xlimgleft>xlimgareawidth-30||xlimgtop>xlimgareaheight-120){
-                            dom.unbind('mouseup');
-                        }else{
-                            dom.bind('mouseup',function(){xlismove = false;});
-                        }
+                        xlimgtop<-xlimgheight+30||xlimgleft<-xlimgwidth+30||xlimgleft>xlimgareawidth-30||xlimgtop>xlimgareaheight-120 ? dom.off('mouseup') : dom.on('mouseup',function (){xlismove = false;});
                         (xlrotater/90)% 4 === 0 ? $xlphotospageImg.css({'top':e.originalEvent.pageY - xlimgy,'left':e.originalEvent.pageX - xlimgx}) : $xlphotospageImg.offset({'top':e.originalEvent.pageY - xlimgy,'left':e.originalEvent.pageX - xlimgx});
                     }
-                }).bind('mouseup',function(){
+                }).on('mouseup',function (){
                     xlismove = false;
                 });
             }
             return false;
     	});
-        $xlPhotospage.on('click',function(e){
+        $xlPhotospage.on('click',function (e){
             var target = e.target;
             switch(target){
                 case $xlphotospageClose[0] :
                     html.removeAttr('style').not('html').css('background-color','#f4f4f4');
-                    if(!($.browser.msie&&$.browser.version < '9.0')||$.browser.version === '10.0'){
+                    if(!($.browser.msie&&($.browser.version < '9.0'||$.browser.version === '10.0'))){
                         $xlMask.fadeTo(300,0).next().fadeTo(250,0);
-                        setTimeout(function(){$xlPhotospage.detach();$xlMask.detach()},400);
+                        setTimeout(function (){$xlPhotospage.detach();$xlMask.detach()},400);
                         isfirst=true;
                     }else{
                         $xlMask.detach();
@@ -315,25 +308,26 @@ $(function (){
             }
             return false;
         }).find('a').attr({'hidefocus':'true','href':'javascript:;'});
-        $xlMask.dblclick(function(){
+        $xlMask.on('dblclick',function (){
             $xlphotospageClose.click();
         });
-        $xlphotospageImg.parent().dblclick(function(){
-            $xlImgoriginal.next().click();
+        $xlphotospageImg.parent().on('dblclick',function (){
+            if(getreqfullscreen())
+                $xlImgoriginal.next().click();
         }).on('mousewheel DOMMouseScroll', function (e) {
-            if($.browser.msie&&($.browser.version === '6.0'))
+            if($.browser.msie&&$.browser.version === '6.0')
                 return false;
             var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||(e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));
             delta > 0 ? xlphotospageimgLimit(1.1) : xlphotospageimgLimit(0.9);
         });
-        $xlphotospageChoose.find('a').on('click',function(){
+        $xlphotospageChoose.find('a').on('click',function (){
             xlimgindex = $(this).parent().index();
             directionLast();
             processImg();
             rerotateimg();
             return !originalimg();
         });
-        dom.keyup(function(event){
+        dom.on('keyup',function (event){
             var code = event.keyCode || event.which || event.charCode;
             switch(code){
                 case 27 :
@@ -366,10 +360,10 @@ $(function (){
             }
             return false;
         });
-        win.on('resize', function() {
+        win.on('resize',function () {
             if (timer)
                 clearTimeout(timer);
-            timer = setTimeout(function(){
+            timer = setTimeout(function (){
                 if(getfullscreenelement()){
                     $xlImgoriginal.next().addClass('xl-photospage-imgexitfullscreen');
                     $xlphotospageImgarea.addClass('xl-imgarea-fullscreen').next().hide();
