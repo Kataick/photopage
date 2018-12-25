@@ -1,5 +1,5 @@
 /**
- * photo.js v2.1.7
+ * photo.js v2.1.8
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
@@ -25,7 +25,7 @@ $(function (){
     for(var i=0;i<xlicon.length;i++){
         i<8 ? xltoolbar+='<a class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'" title="'+ xlicontitle[i] +'"></a>' : xlhandletab+='<li title="'+ xlicontitle[i] +'"><a class="xl-photospage-tab-btn xl-photospage-'+ xlicon[i] +'-btn"><i class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'"></i></a></li>';
     }
-    $xlphotoli.find('.xl-photo-img').on('click',function (){
+    $xlphotoli.on('click','.xl-photo-img',function (){
         xlimgindex = $(this).parent().index(),xlrotater = 0,xlphotolength=xlphoto.length,xlbtndisabled='xl-photospage-imgdisabled';
         html.css('overflow','hidden').not('html').append('<div id="xl-mask" class="xl-mask"></div><div id="xl-photospage" class="xl-photospage"><div class="xl-photospage-main"></div></div>'); 
         $xlMask=$('#xl-mask');$xlPhotospage=$('#xl-photospage'),$xlphotospageMain=$xlPhotospage.find('div.xl-photospage-main');
@@ -61,7 +61,7 @@ $(function (){
                 $xlPhotospage.css('top',dom.scrollTop()+25);
                 $xlImgTit.next().hide().parent().width(xlimgareawidth);
             }
-            //手机
+            //移动端
             if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
                 $xlPhotospage.addClass('xl-photospage-mobile');
                 $xlphotospageImgarea.width(win.width()).height(win.height()).next().hide().end().parent().width(win.width());
@@ -73,11 +73,14 @@ $(function (){
                 xlchoosepage=1,xldirectionnum=0;
                 while(xlimgindex+1>=xlchoosenum+xldirectionnum&&xlchoosepage!=xlchoosemaxpage&&xlimgindex+1>xlchoosenum)
                     xlchoosepage++,xldirectionnum+=7;
-                xlchoosepage!==xlchoosemaxpage ? $xlphotospageChoose.stop().animate({marginLeft:-7*(xlchoosepage-1)*61}) : choosemoveLast();
+                xlchoosepage!==xlchoosemaxpage ? chooseprocess(xlchoosepage) : choosemoveLast();
                 choosemaxpageImg(xlchoosemaxpage,xlchoosepage);
                 $xlphotospageChooseli.removeAttr('class').eq(xlimgindex).addClass('xl-photospage-current').parent().width(xlphotolength*61);
                 isfirst=false;
             }
+        };
+        var chooseprocess=function (page){
+             $xlphotospageChoose.stop().animate({marginLeft:-7*(page-1)*61});
         };
         var choosemoveLast=function (){
             $xlphotospageChoose.stop().animate({marginLeft:-((xlphotolength-xlchoosenum)*61+30)});
@@ -147,8 +150,7 @@ $(function (){
                 if(targetwidth<xlimgoriginalwidth/10)
                     return !stateImg('已缩到最小');
             }
-            $xlphotospageImg.css({'width':targetwidth,'height':targetheight});
-            $xlphotospageImg.offset({'top':$xlphotospageImg.offset().top-(targetheight-xlimgheight)/2,'left':$xlphotospageImg.offset().left-(targetwidth-xlimgwidth)/2});
+            $xlphotospageImg.css({'width':targetwidth,'height':targetheight}).offset({'top':$xlphotospageImg.offset().top-(targetheight-xlimgheight)/2,'left':$xlphotospageImg.offset().left-(targetwidth-xlimgwidth)/2});
             stateImg(Math.round((targetwidth)/xlimgoriginalwidth*100)+'%')
             disabledIcon();
             if(!ismove)
@@ -170,7 +172,7 @@ $(function (){
                         choosemoveLast();
                     else{
                         xldirectionnum+=7,xlchoosepage++;
-                        $xlphotospageChoose.stop().animate({marginLeft:-7*(xlchoosepage-1)*61});
+                        chooseprocess(xlchoosepage);
                     }
                 }
             }else{
@@ -184,7 +186,7 @@ $(function (){
                     xlchoosepage=1;
                 }else{
                     xldirectionnum-=7,xlchoosepage--;
-                    $xlphotospageChoose.stop().animate({marginLeft:-7*(xlchoosepage-1)*61});
+                    chooseprocess(xlchoosepage);
                 }
             }
             choosemaxpageImg(xlchoosemaxpage,xlchoosepage);
@@ -197,7 +199,7 @@ $(function (){
         };
         var overflowmaxLength=function (){
             xldirectionnum=0,xlchoosepage=1;
-            $xlphotospageChoose.stop().animate({marginLeft:-7*(xlchoosepage-1)*61});
+            chooseprocess(xlchoosepage);
             choosemaxpageImg(xlchoosemaxpage,xlchoosepage);
         };
         processImg();
@@ -320,7 +322,7 @@ $(function (){
             var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||(e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));
             delta > 0 ? xlphotospageimgLimit(1.1) : xlphotospageimgLimit(0.9);
         });
-        $xlphotospageChoose.find('a').on('click',function (){
+        $xlphotospageChoose.on('click','a',function (){
             xlimgindex = $(this).parent().index();
             directionLast();
             processImg();
