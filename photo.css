@@ -281,7 +281,8 @@
 .xl-photospage-tab-btn i{
 	width: 16px;
 	height: 16px;
-    font-size: 0}
+    font-size: 0;
+    pointer-events: none}
 .xl-photospage-tab-btn:hover{
     text-decoration: none;
     background-color: #EFEFEF;

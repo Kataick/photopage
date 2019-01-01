@@ -6,6 +6,8 @@
 
 **插件进度：**
 
+**19/1/1 photo.js v2.1.8.1 小优化**
+
 **18/12/25 photo.js v2.1.8 优化代码 添加chooseprocess**
 
 **18/12/07 photo.js v2.1.7 优化并修复bug**
