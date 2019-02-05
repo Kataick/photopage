@@ -112,6 +112,7 @@
 	left: 0;
 	bottom: 56px;
 	+bottom: 0;
+	z-index: 10;
 	width: 100%;
     height: 34px;
     font-size: 16px;
@@ -121,7 +122,35 @@
 	background-color: rgba(0,0,0,.8);
 	filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#c8000000,endcolorstr=#c8000000);
 	cursor: default;
-	white-space: nowrap}
+	white-space: nowrap;
+    transition: bottom .3s ease-in-out;
+}
+.xl-photospage-showimglist{
+    color: #fff;
+    position: absolute;
+    left: 10px;
+    font-size: 14px;
+}
+.xl-photospage-showimglist:after{
+    content: "";
+    float: left;
+    width: 14px;
+    height: 11px;
+    margin-top: 10px;
+    margin-right: 5px;
+    background:url(../img/pssprites.png) no-repeat;
+    background-position: -215px -37px;
+    /*pointer-events: none;*/
+}
+/*.xl-icon-arrow{*/
+/*    background-position: -215px -37px;*/
+/*}*/
+.hide .xl-photospage-showimglist:after{
+    background-position: -227px -37px;
+}
+/*.xl-photospage-imgbar.hide .xl-icon-arrow{*/
+/*    background-position: -227px -37px;*/
+/*}*/
 .xl-photospage-tool{
     position: absolute;
     top: 0;
@@ -165,29 +194,31 @@
 .xl-photospage-imgarea .xl-photospage-imgsee{
     display: block;
 	opacity: 1}
-.xl-photospage-imgchoose{
+.xl-photospage-imglist{
     position: absolute;
 	left: 0;
 	bottom: 0;
 	width: 100%;
 	height: 56px;
-	background-color: #000}
-.xl-photospage-imgchoose-list{
+	background-color: #000;
+    transition: height .3s ease-in-out;
+}
+.xl-photospage-imglist-list{
 	margin: 0 30px;
 	overflow: hidden}
-.xl-photospage-imgchoose ul{
+.xl-photospage-imglist ul{
 	width: 100%;
 	height: 56px;
 	overflow: hidden;
     user-select: none}
-.xl-photospage-imgchoose li{
+.xl-photospage-imglist li{
     position: relative;
 	float: left;
 	width: 56px;
 	height: 56px;
 	margin-right: 5px;
 	overflow: hidden}
-.xl-photospage-imgchoose li a{
+.xl-photospage-imglist li a{
     position: relative;
 	display: inline-block;
 	width: 56px;
@@ -197,20 +228,20 @@
 	outline: none;
 	opacity: .6;
     filter: Alpha(Opacity=60)}
-.xl-photospage-imgchoose li.xl-photospage-current a,.xl-photospage-imgchoose li a:hover{
+.xl-photospage-imglist li.xl-photospage-current a,.xl-photospage-imglist li a:hover{
     z-index: 999;
 	padding: 0;
 	border: 3px solid #73B4E0;
     filter: Alpha(Opacity=100);
     opacity: 1}
-.xl-photospage-imgchoose a:hover{
+.xl-photospage-imglist a:hover{
 	opacity: 1}
-.xl-photospage-imgchoose img{
+.xl-photospage-imglist img{
 	display: block;
 	width: 50px;
     height: 50px;
 	border: 1px solid #000}
-.xl-ps-icon-chooseprve,.xl-ps-icon-choosenext{
+.xl-ps-icon-listprve,.xl-ps-icon-listnext{
 	position: absolute;
 	top: 0;
 	width: 15px;
@@ -219,10 +250,10 @@
 	outline: none;
     opacity: .6;
     filter: alpha(opacity=60)}
-.xl-ps-icon-chooseprve{
+.xl-ps-icon-listprve{
 	left: 8px;
     background-position: -33px -46px}
-.xl-ps-icon-choosenext{
+.xl-ps-icon-listnext{
 	right: 8px;
 	background-position: -48px -46px}
 .xl-photospage-intro{
@@ -315,10 +346,10 @@
     height: 100% !important}
 .xl-imgarea-fullscreen .xl-ps-icon-fullscreenclose{
     display: block}
-.xl-imgarea-fullscreen .xl-photospage-imgchoose,.xl-imgarea-fullscreen .xl-photospage-imgsee{
+.xl-imgarea-fullscreen .xl-photospage-imglist,.xl-imgarea-fullscreen .xl-photospage-imgsee{
     transition: all .3s ease-out;
     opacity: 0}
-.xl-imgarea-fullscreen:hover .xl-photospage-imgchoose,.xl-imgarea-fullscreen:hover .xl-photospage-imgsee{
+.xl-imgarea-fullscreen:hover .xl-photospage-imglist,.xl-imgarea-fullscreen:hover .xl-photospage-imgsee{
     opacity: 1}
 .xl-imgarea-fullscreen .xl-photospage-state{
     top: 44%}
