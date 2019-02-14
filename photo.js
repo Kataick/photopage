@@ -1,5 +1,5 @@
 /**
- * photo.js v2.1.9.1
+ * photo.js v2.2.0
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
@@ -73,23 +73,25 @@ $(function (){
                 $xlphotospageNext.parent().next().hide();
             }
             xllistnum=Math.round((xlimgareawidth-60) / 61),xllistmaxpage=Math.round((xlphotolength-xllistnum) / 7+1);
+            if(xllistmaxpage<1)
+                xllistmaxpage=1;
             if(isfirst){
-                xllistpage=1,xldirectionnum=0;
+                isfirst=false,xllistpage=1,xldirectionnum=0;
                 while(xlimgindex+1>=xllistnum+xldirectionnum&&xllistpage!=xllistmaxpage&&xlimgindex+1>xllistnum)
                     xllistpage++,xldirectionnum+=7;
                 xllistpage!==xllistmaxpage ? listprocess(xllistpage) : listmoveLast();
-                listmaxpageImg(xllistmaxpage,xllistpage);
                 $xlphotospageListli.removeAttr('class').eq(xlimgindex).addClass('xl-photospage-current').parent().width(xlphotolength*61);
-                isfirst=false;
             }
+            listmaxpageImg(xllistmaxpage,xllistpage);
         };
         var listprocess=function (page){
             $xlphotospageList.stop().animate({marginLeft:-7*(page-1)*61});
         };
         var listmoveLast=function (){
-            $xlphotospageList.stop().animate({marginLeft:-((xlphotolength-xllistnum)*61+30)});
-            xllistpage=xllistmaxpage,xldirectionnum=(xllistmaxpage-1)*7;
-            listmaxpageImg(xllistmaxpage,xllistpage);
+            if(xllistmaxpage!=1){
+                $xlphotospageList.stop().animate({marginLeft:-((xlphotolength-xllistnum)*61+30)});
+                xllistpage=xllistmaxpage,xldirectionnum=(xllistmaxpage-1)*7;
+            }
         };
         var stateImg=function (text){
             $xlphotospageState.text(text).css('left',xlimgareawidth/2-$xlphotospageState.width()/2-20).stop().show().delay(1500).hide(0);
@@ -201,11 +203,6 @@ $(function (){
             if((8 + (xldirectionnum-7) === xlimgindex+1 && xllistpage!==1 &&xllistpage!=xllistmaxpage)||(xlphotolength-xllistnum+1===xlimgindex+1&&xllistpage===xllistmaxpage))
                 directionList('prev');
         };
-        var overflowmaxLength=function (){
-            xldirectionnum=0,xllistpage=1;
-            listprocess(xllistpage);
-            listmaxpageImg(xllistmaxpage,xllistpage);
-        };
         processImg();
         $xlphotospageImg.on('mousedown',function (e){
             if(e.button===0){
@@ -242,11 +239,14 @@ $(function (){
             var target = e.target;
             switch(target){
                 case $xlphotospageClose[0] :
+                    isfirst=true;
                     html.removeAttr('style').not('html').css('background-color','#f4f4f4');
                     if(!($.browser.msie&&($.browser.version < '9.0'||$.browser.version === '10.0'))){
-                        $xlMask.fadeTo(300,0).next().fadeTo(250,0);
-                        setTimeout(function (){$xlPhotospage.detach();$xlMask.detach()},400);
-                        isfirst=true;
+                        $xlMask.fadeTo(300,0,function (){
+                            $(this).detach();
+                        }).next().fadeTo(250,0,function (){
+                            $(this).detach();
+                        });
                     }else{
                         $xlMask.detach();
                         $xlPhotospage.detach();
@@ -259,8 +259,10 @@ $(function (){
                     processImg();
                     break;
                 case $xlphotospageNext[0] :
-                    if(xlimgindex+1===xlphotolength)
-                        overflowmaxLength();
+                    if(xlimgindex+1===xlphotolength){
+                        xldirectionnum=0,xllistpage=1;
+                        listprocess(xllistpage);
+                    }
                     xllistpage===xllistmaxpage ? listmoveLast() : directionLast();
                     directionImg(+1);
                     processImg();
@@ -362,8 +364,6 @@ $(function (){
                     xlphotospageimgLimit(1.1);
                     break;
                 case 39 :
-                    if(xlimgindex+1===xlphotolength)
-                        overflowmaxLength();
                     $xlphotospageNext.click();
                     break;
                 case 40 :
