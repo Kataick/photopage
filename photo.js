@@ -1,5 +1,5 @@
 /**
- * photo.js v2.2.0
+ * photo.js v2.2.1
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
@@ -33,7 +33,7 @@ $(function (){
         var imgtitEllipsis=function (xlphototit){
             return xlphototit.length <= 18 ? xlphototit + '<em> ' + (xlimgindex+1) + '/' + xlphotolength + '</em>' : xlphototit.substring(0,18) + '<em>… ' + (xlimgindex+1) + '/' + xlphotolength + '</em>';
         };
-        $xlphotospageMain.prepend('<div class="xl-photospage-imgarea"><div class="xl-photospage-state"></div><a class="xl-photospage-icon xl-ps-icon-fullscreenclose" title="退出全屏"></a><div class="xl-photospage-img"><img src="'+ xlphoto[xlimgindex][0] +'" /></div><div class="xl-photospage-imgsee"><a class="xl-photospage-icon xl-ps-icon-prevphoto"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><a class="xl-photospage-icon xl-ps-icon-nextphoto"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><div class="xl-photospage-imgbar"><a class="xl-photospage-showimglist" title="隐藏图片列表">隐藏图片列表</a><span class="xl-photospage-imgtit" title="'+ xlphoto[xlimgindex][1] +'">'+ imgtitEllipsis(xlphoto[xlimgindex][1]) +'</span><div class="xl-photospage-tool">'+ xltoolbar +'</div></div></div><div class="xl-photospage-imglist"><a class="xl-photospage-icon xl-ps-icon-listprve"></a><div class="xl-photospage-imglist-list clearfix" ><ul>'+ xllistcontent +'</ul></div><a class="xl-photospage-icon xl-ps-icon-listnext"></a></div><div class="xl-photospage-fullscreen-ious"><div></div></div></div>');
+        $xlphotospageMain.prepend('<div class="xl-photospage-imgarea"><div class="xl-photospage-state"></div><a class="xl-photospage-icon xl-ps-icon-fullscreenclose" title="退出全屏"></a><div class="xl-photospage-img"><img /></div><div class="xl-photospage-imgsee"><a class="xl-photospage-icon xl-ps-icon-prevphoto"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><a class="xl-photospage-icon xl-ps-icon-nextphoto"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><div class="xl-photospage-imgbar"><a class="xl-photospage-showimglist" title="隐藏图片列表">隐藏图片列表</a><span class="xl-photospage-imgtit" title="'+ xlphoto[xlimgindex][1] +'">'+ imgtitEllipsis(xlphoto[xlimgindex][1]) +'</span><div class="xl-photospage-tool">'+ xltoolbar +'</div></div></div><div class="xl-photospage-imglist"><a class="xl-photospage-icon xl-ps-icon-listprve"></a><div class="xl-photospage-imglist-list clearfix" ><ul>'+ xllistcontent +'</ul></div><a class="xl-photospage-icon xl-ps-icon-listnext"></a></div><div class="xl-photospage-fullscreen-ious"><div></div></div></div>');
         $xlphotospageImgarea=$xlphotospageMain.find('div.xl-photospage-imgarea'),$xlphotospageState=$xlphotospageImgarea.find('div.xl-photospage-state'),$xlphotospageImg=$xlphotospageImgarea.find('div.xl-photospage-img img'),$xlphotospagePrev=$xlphotospageImgarea.find('a.xl-ps-icon-prevphoto'),$xlphotospageNext=$xlphotospagePrev.next(),$xlphotospageList=$xlphotospageImgarea.find('div.xl-photospage-imglist-list ul'),$xlphotospageListprve=$xlphotospageImgarea.find('a.xl-ps-icon-listprve'),$xlphotospageListli=$xlphotospageList.find('li');
         $xlphotospageImgarea.after('<div class="xl-photospage-intro"><div class="xl-photospage-content"><h1>'+ xlphoto[xlimgindex][1] +'</h1><div class="xl-photospage-handle-tab"><ul class="clearfix">'+ xlhandletab +'</ul></div><div class="xl-photospage-userinfo clearfix"><div class="xl-photospage-user-avatar" onselectstart="return false;"><img src="'+ xlphoto[xlimgindex][3] +'" alt="上传者头像" /></div><div class="xl-photospage-section"><div class="xl-photospage-user-info"><a href="#" title="'+ xlphoto[xlimgindex][4] +'">'+ xlphoto[xlimgindex][4] +'</a></div><div class="xl-photospage-timestamp">'+ xlphoto[xlimgindex][5] +'</div></div></div><p>'+ xlphoto[xlimgindex][2] +'</p></div></div><div class="xl-photospage-vanish"><a class="xl-photospage-icon xl-ps-icon-close" title="关闭"></a></div>');
         $xlphotospageContent=$xlphotospageMain.find('div.xl-photospage-content'),$xlImgTit=$xlphotospageImgarea.find('span.xl-photospage-imgtit'),$xlphotospageClose=$xlphotospageMain.find('a.xl-ps-icon-close'),$xlImgleftrotate=$xlphotospageImgarea.find('a.xl-ps-icon-'+ xlicon[1] +''),$xlImgrerotate=$xlImgleftrotate.next().next(),$xlImgoriginal=$xlphotospageImgarea.find('a.xl-ps-icon-'+ xlicon[6] +''),$xlphotospageTimestamp=$xlphotospageContent.find('div.xl-photospage-timestamp');
@@ -126,7 +126,7 @@ $(function (){
         };
         var processImg=function (){
             ismove=false;
-            $xlphotospageImg.attr('src',xlphoto[xlimgindex][0]).css({'width':'','height':''}).parent().removeAttr('style');
+            $xlphotospageImg.attr('src',xlphoto[xlimgindex][0]).css({width:"", height:""}).parent().removeAttr('style');
             $xlphotospageContent.find('h1').text(xlphoto[xlimgindex][1]).end().find('p').text(xlphoto[xlimgindex][2]);
             $xlImgTit.html(imgtitEllipsis(xlphoto[xlimgindex][1])).attr('title',xlphoto[xlimgindex][1]);
             $xlphotospageTimestamp.text(xlphoto[xlimgindex][5]).prev().find('a').text(xlphoto[xlimgindex][4]).attr('title',xlphoto[xlimgindex][4]).end().parent().prev().find('img').attr('src',xlphoto[xlimgindex][3]);
@@ -159,8 +159,6 @@ $(function (){
             $xlphotospageImg.css({'width':targetwidth,'height':targetheight}).offset({'top':$xlphotospageImg.offset().top-(targetheight-xlimgheight)/2,'left':$xlphotospageImg.offset().left-(targetwidth-xlimgwidth)/2});
             stateImg(Math.round((targetwidth)/xlimgoriginalwidth*100)+'%')
             disabledIcon();
-            if(!ismove)
-                resizeLayout();
         };
         var listmaxpageImg=function (maxpage,page){
             maxpage===page ? $xlphotospageListprve.next().next().addClass(xlbtndisabled) : $xlphotospageListprve.next().next().removeClass(xlbtndisabled);
@@ -232,8 +230,10 @@ $(function (){
         }).on('mousewheel DOMMouseScroll', function (e) {
             if($.browser.msie&&$.browser.version === '6.0')
                 return false;
-            var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||(e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));
-            delta > 0 ? xlphotospageimgLimit(1.1) : xlphotospageimgLimit(0.9);
+            if(!isfullscreenmove){
+                var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||(e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));
+                delta > 0 ? xlphotospageimgLimit(1.1) : xlphotospageimgLimit(0.9);
+            }
         });
         $xlPhotospage.on('click',function (e){
             var target = e.target;
@@ -273,7 +273,7 @@ $(function (){
                         break;
                     }
                     ismove=false;
-                    $xlphotospageImg.css({'top':(xlimgareaheight-xlimgheight) / 2-27,'left':(xlimgareawidth-xlimgwidth) / 2});
+                    resizeLayout();
                     disabledIcon();
                     break;
                 case $xlImgleftrotate[0] :
@@ -334,7 +334,7 @@ $(function (){
                         isshowimglist=false;
                     }
                     break;
-                default : return false;
+                default : break;
             }
             return false;
         });
@@ -375,7 +375,7 @@ $(function (){
                 case 82 :
                     rotateImg(90);
                     break;
-                default : return false;
+                default : break;
             }
             return false;
         });
