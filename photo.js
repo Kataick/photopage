@@ -4,7 +4,7 @@
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
 $(function (){
-    var root = document.documentElement,timer,$xlphotoli=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent='',isfirst=isshowimglist=true,ismove=iszoom=isrotate=isdrag=false,xlphoto=[],xltoolbar='',xlhandletab='',xlicon=[],xlicontitle=[];
+    var root = document.documentElement,timer,$xlphotoli=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=isshowimglist=true,ismove=iszoom=isrotate=isdrag=false,xlphoto=xlicon=xlicontitle=[];
     $('.xl-backtotop').css('margin-left','720px');
     var getreqfullscreen=function (){
         return root.requestFullscreen || root.webkitRequestFullscreen || root.mozRequestFullScreen || root.msRequestFullscreen;
@@ -84,6 +84,7 @@ $(function (){
                 $xlphotospageListli.removeAttr('class').eq(xlimgindex).addClass('xl-photospage-current').parent().width(xlphotolength*61);
             }
             listmaxpageImg(xllistmaxpage,xllistpage);
+            dom.off('mousemove mouseup');
         };
         var listprocess=function (page){
             $xlphotospageList.stop().animate({marginLeft:-7*(page-1)*61});
@@ -204,9 +205,8 @@ $(function (){
         };
         processImg();
         $xlphotospageImg.on('mousedown',function (e){
-            if(e.button===0){
+            if(e.which===1){
                 isdrag=true;
-                $(this).parent().css('background','#000');
                 var xlimgx,xlimgy;
                 if((xlrotater/90)%4 === 0)
                     xlimgx = e.originalEvent.pageX - $xlphotospageImg.position().left,xlimgy = e.originalEvent.pageY - $xlphotospageImg.position().top
@@ -215,19 +215,21 @@ $(function (){
                 dom.on('mousemove',function (e){
                     ismove=true;
                     disabledIcon();
-                    var xlimgleft=$xlphotospageImg.position().left,xlimgtop=$xlphotospageImg.position().top;
-                    xlimgtop<-xlimgheight+30||xlimgleft<-xlimgwidth+30||xlimgleft>xlimgareawidth-30||xlimgtop>xlimgareaheight-120 ? dom.off('mouseup') : dom.on('mouseup',function (){xlismove = isdrag = false;});
                     (xlrotater/90)% 4 === 0 ? $xlphotospageImg.css({'top':e.originalEvent.pageY - xlimgy,'left':e.originalEvent.pageX - xlimgx}) : $xlphotospageImg.offset({'top':e.originalEvent.pageY - xlimgy,'left':e.originalEvent.pageX - xlimgx});
                 }).on('mouseup',function (){
-                    isdrag = false;
-                    dom.off('mousemove mouseup');
+                    var xlimgleft=$xlphotospageImg.position().left,xlimgtop=$xlphotospageImg.position().top;
+                    if(xlimgtop<-xlimgheight+50||xlimgleft<-xlimgwidth+40&&(xlrotater/90)% 4 === 0||xlimgleft>xlimgareawidth-40||xlimgtop>xlimgareaheight-110||xlimgleft<-xlimgheight+40&&(xlrotater/90)% 4 !== 0)
+                        return false;
+                    else{
+                        isdrag = false;
+                        dom.off('mousemove mouseup');
+                    }
                 });
             }
             return false;
     	}).parent().on('dblclick',function (){
-            if(getreqfullscreen()){
-                dom.off('mousemove mouseup');
-                $xlImgoriginal.next().click();}
+            if(getreqfullscreen())
+                $xlImgoriginal.next().click();
         }).on('mousewheel DOMMouseScroll', function (e) {
             if($.browser.msie&&$.browser.version === '6.0')
                 return false;
