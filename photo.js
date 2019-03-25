@@ -1,10 +1,10 @@
 /**
- * photo.js v2.2.2
+ * photo.js v2.2.3
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
 $(function (){
-    var root = document.documentElement,timer,$xlphotoli=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=isshowimglist=true,ismove=iszoom=isrotate=isdrag=false,xlphoto=xlicon=xlicontitle=[];
+    var root = document.documentElement,timer,$xlphotoli=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=ismove=iszoom=isrotate=isdrag=isshowimglist=false,xlphoto=xlicon=xlicontitle=[];
     $('.xl-backtotop').css('margin-left','720px');
     var getreqfullscreen=function (){
         return root.requestFullscreen || root.webkitRequestFullscreen || root.mozRequestFullScreen || root.msRequestFullscreen;
@@ -54,12 +54,23 @@ $(function (){
             $xlImgoriginal.next().hide();
         var resizeLayout=function (){
             xlimgareawidth=win.width()-500,xlimgareaheight=win.height()-50,xlimgwidth=$xlphotospageImg.width(),xlimgheight=$xlphotospageImg.height();
+            var ratio;
+            if(!ismove&&xlimgheight>xlimgareaheight){
+                ratio=xlimgareaheight/xlimgheight;
+                xlimgheight=xlimgareaheight-34;
+                xlimgwidth=xlimgwidth*ratio-34;
+            }
+            if(!ismove&&xlimgwidth>xlimgareawidth){
+                ratio=xlimgareawidth/xlimgwidth;
+                xlimgwidth=xlimgareawidth;
+                xlimgheight*=ratio;
+            }
             xlimgareawidth+300<=1250 ? $xlImgTit.next().hide() : $xlImgTit.next().show();
-            $xlphotospageMain.css({'width':xlimgareawidth+300,'height':xlimgareaheight}).parent().fadeTo(300,1).removeClass('xl-photospage-mobile');
+            $xlphotospageMain.css({'width':xlimgareawidth+300,'height':xlimgareaheight}).parent().fadeTo(300,1);
             $xlphotospageImgarea.removeAttr('style').width(xlimgareawidth);
             if(!ismove&&$xlPhotospage.hasClass('xl-imgarea-fullscreen'))
                 xlimgareawidth+=500,xlimgareaheight+50;
-            $xlphotospageImg.css({'width':xlimgwidth,'height':xlimgheight,'top':(xlimgareaheight-xlimgheight) / 2-27,'left':(xlimgareawidth-xlimgwidth) / 2,'opacity':'1'});
+            $xlphotospageImg.css({'width':xlimgwidth,'height':xlimgheight,'top':(xlimgareaheight-xlimgheight-34) / 2,'left':(xlimgareawidth-xlimgwidth) / 2,'opacity':'1'});
             if($.browser.msie&&($.browser.version === '6.0')){
                 $xlphotospageContent.parent().css('margin-left',xlimgareawidth+15);
                 $xlPhotospage.css('top',dom.scrollTop()+25);
@@ -71,13 +82,15 @@ $(function (){
                 $xlphotospageImgarea.width(win.width()).height(win.height()).parent().width(win.width());
                 $xlphotospageImg.css({'top':(xlimgareaheight-xlimgheight) / 2,'left':(xlimgareawidth+500-xlimgwidth) / 2});
                 if($xlPhotospage.hasClass('xl-imgarea-fullscreen'))
-                    $xlImgoriginal.next().click()
+                    $xlImgoriginal.next().click();
+            }else{
+                $xlPhotospage.removeClass('xl-photospage-mobile');
             }
             xllistnum=Math.round((xlimgareawidth-60) / 61),xllistmaxpage=Math.round((xlphotolength-xllistnum) / 7+1);
             if(xllistmaxpage<1)
                 xllistmaxpage=1;
-            if(isfirst){
-                isfirst=false,xllistpage=1,xldirectionnum=0;
+            if(!isfirst){
+                isfirst=true,xllistpage=1,xldirectionnum=0;
                 while(xlimgindex+1>=xllistnum+xldirectionnum&&xllistpage!=xllistmaxpage&&xlimgindex+1>xllistnum)
                     xllistpage++,xldirectionnum+=7;
                 xllistpage!==xllistmaxpage ? listprocess(xllistpage) : listmoveLast();
@@ -123,7 +136,7 @@ $(function (){
         };
         var originalimg=function (){
             iszoom=false;
-            $xlphotospageImg.css({'width':xlimgoriginalwidth,'height':xlimgoriginalheight,'top':$xlphotospageImg.position().top-(xlimgoriginalheight-xlimgheight)/2,'left':$xlphotospageImg.position().left-(xlimgoriginalwidth-xlimgwidth)/2});
+            $xlphotospageImg.css({'width':xlimgoriginalwidth,'height':xlimgoriginalheight,'top':(xlimgareaheight-xlimgoriginalheight-34) / 2,'left':(xlimgareawidth-xlimgoriginalwidth) / 2});
             disabledIcon();
         };
         var processImg=function (){
@@ -206,7 +219,7 @@ $(function (){
         processImg();
         $xlphotospageImg.on('mousedown',function (e){
             if(e.which===1){
-                isdrag=true;
+                isdrag = !isdrag;
                 var xlimgx,xlimgy;
                 if((xlrotater/90)%4 === 0)
                     xlimgx = e.originalEvent.pageX - $xlphotospageImg.position().left,xlimgy = e.originalEvent.pageY - $xlphotospageImg.position().top
@@ -221,7 +234,7 @@ $(function (){
                     if(xlimgtop<-xlimgheight+50||xlimgleft<-xlimgwidth+40&&(xlrotater/90)% 4 === 0||xlimgleft>xlimgareawidth-40||xlimgtop>xlimgareaheight-110||xlimgleft<-xlimgheight+40&&(xlrotater/90)% 4 !== 0)
                         return false;
                     else{
-                        isdrag = false;
+                        isdrag = !isdrag;
                         dom.off('mousemove mouseup');
                     }
                 });
@@ -242,7 +255,7 @@ $(function (){
             var target = e.target;
             switch(target){
                 case $xlphotospageClose[0] :
-                    isfirst=true;
+                    isfirst=!isfirst;
                     if(!($.browser.msie&&($.browser.version < '9.0'||$.browser.version === '10.0'))){
                         $xlMask.fadeTo(300,0,function (){
                             $(this).detach();
@@ -307,9 +320,11 @@ $(function (){
                     break;
                 case $xlImgoriginal.next()[0] :
                     if(getreqfullscreen()){
-                        !getfullscreenelement() ? getreqfullscreen().call($xlphotospageImgarea[0]) : getexitfullscreen().call(document);
-                        if(!$xlImgleftrotate.prev().hasClass(xlbtndisabled))
-                            $xlImgleftrotate.prev().click();
+                        getfullscreenelement() ? getexitfullscreen().call(document) : getreqfullscreen().call($xlphotospageImgarea[0]);
+                        if(!$xlImgleftrotate.prev().hasClass(xlbtndisabled)){
+                            ismove=false;
+                            disabledIcon();
+                        }
                         win.resize();
                     }else{
                         stateImg('浏览器不支持全屏');
@@ -325,15 +340,14 @@ $(function (){
                     directionList('next');
                     break;
                 case $xlphotospageshowimglist[0] :
-                    if($xlphotospageshowimglist.parent().hasClass('hide-imglist')){
+                    if(isshowimglist){
                         $xlphotospageshowimglist.text('隐藏图片列表').attr('title','隐藏图片列表').parent().removeClass('hide-imglist');
                         $xlphotospageList.parent().parent().removeAttr('style');
-                        isshowimglist=true;
                     }else{
                         $xlphotospageshowimglist.text('显示图片列表').attr('title','显示图片列表').parent().addClass('hide-imglist');
                         $xlphotospageList.parent().parent().css('height','0');
-                        isshowimglist=false;
                     }
+                    isshowimglist=!isshowimglist;
                     break;
                 default : break;
             }
@@ -386,7 +400,7 @@ $(function (){
             timer = setTimeout(function (){
                 var $xlphotospagefullious=$('.xl-photospage-fullscreen-ious');
                 if(getfullscreenelement()){
-                    if(!isshowimglist){
+                    if(isshowimglist){
                         $xlphotospagefullious.prev().removeAttr('style');
                     }else{
                         $xlphotospageImgarea.addClass('above');
@@ -436,7 +450,7 @@ $(function (){
                     });
                     $xlPhotospage.addClass('xl-imgarea-fullscreen');
                 }else{
-                    if(!isshowimglist)
+                    if(isshowimglist)
                         $xlphotospageshowimglist.click();
                     $xlphotospagefullious.off('mouseover').prev().prev().find('div,a').removeAttr('style');
                     $xlphotospageImgarea.off("mouseenter").off("mousemove").parent().parent().removeClass('xl-imgarea-fullscreen');
