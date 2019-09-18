@@ -1,5 +1,5 @@
 /**
- * photo.js v2.2.3
+ * photo.js v2.2.4
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
@@ -31,11 +31,12 @@ $(function (){
         html.css('overflow','hidden').not('html').append('<div id="xl-mask" class="xl-mask"></div><div id="xl-photospage" class="xl-photospage"><div class="xl-photospage-main"></div></div>'); 
         $xlMask=$('#xl-mask');$xlPhotospage=$('#xl-photospage'),$xlphotospageMain=$xlPhotospage.find('div.xl-photospage-main');
         var imgtitEllipsis=function (xlphototit){
-            return xlphototit.length <= 18 ? xlphototit + '<em> ' + (xlimgindex+1) + '/' + xlphotolength + '</em>' : xlphototit.substring(0,18) + '<em>… ' + (xlimgindex+1) + '/' + xlphotolength + '</em>';
+            return xlphototit.length <= 18 ? xlphototit + '<em> - ' + (xlimgindex+1) + ' / ' + xlphotolength + '</em>' : xlphototit.substring(0,18) + '<em>… - ' + (xlimgindex+1) + ' / ' + xlphotolength + '</em>';
         };
         $xlphotospageMain.prepend('<div class="xl-photospage-imgarea"><div class="xl-photospage-state"></div><a class="xl-photospage-icon xl-ps-icon-fullscreenclose" title="退出全屏"></a><div class="xl-photospage-img"><img /></div><div class="xl-photospage-imgsee"><a class="xl-photospage-icon xl-ps-icon-prevphoto"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><a class="xl-photospage-icon xl-ps-icon-nextphoto"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><div class="xl-photospage-imgbar"><a class="xl-photospage-showimglist" title="隐藏图片列表">隐藏图片列表</a><span class="xl-photospage-imgtit"></span><div class="xl-photospage-tool">'+ xltoolbar +'</div></div></div><div class="xl-photospage-imglist"><a class="xl-photospage-icon xl-ps-icon-listprve"></a><div class="xl-photospage-imglist-list clearfix" ><ul>'+ xllistcontent +'</ul></div><a class="xl-photospage-icon xl-ps-icon-listnext"></a></div><div class="xl-photospage-fullscreen-ious"><div></div></div></div>');
         $xlphotospageImgarea=$xlphotospageMain.find('div.xl-photospage-imgarea'),$xlphotospageState=$xlphotospageImgarea.find('div.xl-photospage-state'),$xlphotospageImg=$xlphotospageImgarea.find('div.xl-photospage-img img'),$xlphotospagePrev=$xlphotospageImgarea.find('a.xl-ps-icon-prevphoto'),$xlphotospageNext=$xlphotospagePrev.next(),$xlphotospageList=$xlphotospageImgarea.find('div.xl-photospage-imglist-list ul'),$xlphotospageListprve=$xlphotospageImgarea.find('a.xl-ps-icon-listprve'),$xlphotospageListli=$xlphotospageList.find('li');
         $xlphotospageImgarea.after('<div class="xl-photospage-intro"><div class="xl-photospage-content"><h1></h1><div class="xl-photospage-handle-tab"><ul class="clearfix">'+ xlhandletab +'</ul></div><div class="xl-photospage-userinfo clearfix"><div class="xl-photospage-user-avatar" onselectstart="return false;"><img alt="上传者头像" /></div><div class="xl-photospage-section"><div class="xl-photospage-user-info"><a href="#"></a></div><div class="xl-photospage-timestamp"></div></div></div><p></p></div></div><div class="xl-photospage-vanish"><a class="xl-photospage-icon xl-ps-icon-close" title="关闭"></a></div>');
+        $('.xl-photospage-download-btn').attr('download','');
         $xlphotospageContent=$xlphotospageMain.find('div.xl-photospage-content'),$xlImgTit=$xlphotospageImgarea.find('span.xl-photospage-imgtit'),$xlphotospageClose=$xlphotospageMain.find('a.xl-ps-icon-close'),$xlImgleftrotate=$xlphotospageImgarea.find('a.xl-ps-icon-'+ xlicon[1] +''),$xlImgrerotate=$xlImgleftrotate.next().next(),$xlImgoriginal=$xlphotospageImgarea.find('a.xl-ps-icon-'+ xlicon[6] +''),$xlphotospageTimestamp=$xlphotospageContent.find('div.xl-photospage-timestamp');
         $xlphotospageshowimglist=$xlphotospageImgarea.find('a.xl-photospage-showimglist');
         if($.browser.msie&&($.browser.version !== '10.0')){
@@ -141,6 +142,7 @@ $(function (){
         };
         var processImg=function (){
             ismove=false;
+            $('.xl-photospage-download-btn').attr('href',xlphoto[xlimgindex][0]);
             $xlphotospageImg.attr('src',xlphoto[xlimgindex][0]).css({width:"", height:""}).parent().removeAttr('style');
             $xlphotospageContent.find('h1').text(xlphoto[xlimgindex][1]).end().find('p').text(xlphoto[xlimgindex][2]);
             $xlImgTit.html(imgtitEllipsis(xlphoto[xlimgindex][1])).attr('title',xlphoto[xlimgindex][1]);
@@ -325,6 +327,7 @@ $(function (){
                             ismove=false;
                             disabledIcon();
                         }
+                        $xlphotospageImg.css({'width':xlphoto[xlimgindex][3],'height':xlphoto[xlimgindex][4]});
                         win.resize();
                     }else{
                         stateImg('浏览器不支持全屏');
@@ -351,7 +354,7 @@ $(function (){
                     break;
                 default : break;
             }
-            return false;
+            // return false;
         });
         $xlMask.on('dblclick',function (){
             $xlphotospageClose.click();
@@ -398,7 +401,7 @@ $(function (){
             if (timer)
                 timer&&clearTimeout(timer);
             timer = setTimeout(function (){
-                var $xlphotospagefullious=$('.xl-photospage-fullscreen-ious');
+                var $xlphotospagefullious=$('.xl-photospage-fullscreen-ious'),$hoverEle=[$xlphotospagePrev[0],$xlphotospageNext[0]];
                 if(getfullscreenelement()){
                     if(isshowimglist){
                         $xlphotospagefullious.prev().removeAttr('style');
@@ -412,21 +415,23 @@ $(function (){
                     }
                     var onmousestop = function (){
                         if(getfullscreenelement()){
+                            var nohover;
                             if($xlphotospageImgarea.hasClass('above')){
                                 if(!$xlphotospagePrev.is(":animated"))
-                                    $xlphotospagePrev.fadeOut().next().fadeOut();
+                                    $($hoverEle).fadeOut();
                             }else{
-                                if($xlphotospagePrev.is(':hover')){
-                                    $xlphotospageNext.fadeOut();
-                                    return false;
-                                }else if($xlphotospageNext.is(':hover')){
-                                    $xlphotospagePrev.fadeOut();
-                                    return false;
+                                for(var i=0;i<$hoverEle.length;i++){
+                                    if($($hoverEle[i]).is(':hover')){
+                                        $($hoverEle).not($($hoverEle[i])).fadeOut();
+                                        nohover=true;
+                                        break;
+                                    }
                                 }
-                                if(!$xlphotospageshowimglist.parent().is(":animated"))
-                                    $xlphotospageshowimglist.parent().fadeOut();
-                                if(!$xlphotospagePrev.is(":animated"))
-                                    $xlphotospagePrev.fadeOut().next().fadeOut();
+                                if(!nohover){
+                                    $xlphotospageNext.next().fadeOut();
+                                    $($hoverEle).fadeOut();
+                                    nohover=!nohover;
+                                }
                             }
                         }
                     }, thread;
@@ -441,10 +446,10 @@ $(function (){
                         if(win.height()-130>e.originalEvent.pageY){
                             $xlphotospageImgarea.removeClass('above');
                         }
-                        if(!$xlphotospageshowimglist.parent().is(":animated"))
-                            $xlphotospageshowimglist.parent().fadeIn();
-                        if(!$xlphotospagePrev.is(":animated"))
-                            $xlphotospagePrev.fadeIn().next().fadeIn();
+                        if(!$xlphotospageNext.next().is(":animated")){
+                            $xlphotospageNext.next().fadeIn();
+                            $($hoverEle).fadeIn();
+                        }
                         thread&&clearTimeout(thread);
                         thread = setTimeout(onmousestop, 1750);
                     });
