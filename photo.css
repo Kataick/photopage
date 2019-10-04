@@ -133,6 +133,7 @@
     color: #c5c5c5;
     opacity: .8;
     filter: alpha(opacity=80);
+    user-select: none
 }
 .xl-photospage-showimglist:hover{
     text-decoration: none;

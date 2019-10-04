@@ -1,5 +1,5 @@
 /**
- * photo.js v2.2.4
+ * photo.js v2.2.5
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
@@ -92,10 +92,10 @@ $(function (){
                 xllistmaxpage=1;
             if(!isfirst){
                 isfirst=true,xllistpage=1,xldirectionnum=0;
-                while(xlimgindex+1>=xllistnum+xldirectionnum&&xllistpage!=xllistmaxpage&&xlimgindex+1>xllistnum)
+                while(xlimgindex+1>=xllistnum+xldirectionnum&&xllistpage!==xllistmaxpage&&xlimgindex+1>xllistnum)
                     xllistpage++,xldirectionnum+=7;
                 xllistpage!==xllistmaxpage ? listprocess(xllistpage) : listmoveLast();
-                $xlphotospageListli.removeAttr('class').eq(xlimgindex).addClass('xl-photospage-current').parent().width(xlphotolength*61);
+                $xlphotospageListli.removeAttr('class').slice(xlimgindex).addClass('xl-photospage-current').parent().width(xlphotolength*61);
             }
             listmaxpageImg(xllistmaxpage,xllistpage);
             dom.off('mousemove mouseup');
@@ -104,7 +104,7 @@ $(function (){
             $xlphotospageList.stop().animate({marginLeft:-7*(page-1)*61});
         };
         var listmoveLast=function (){
-            if(xllistmaxpage!=1){
+            if(xllistmaxpage!==1){
                 $xlphotospageList.stop().animate({marginLeft:-((xlphotolength-xllistnum)*61+30)});
                 xllistpage=xllistmaxpage,xldirectionnum=(xllistmaxpage-1)*7;
             }
@@ -147,7 +147,7 @@ $(function (){
             $xlphotospageContent.find('h1').text(xlphoto[xlimgindex][1]).end().find('p').text(xlphoto[xlimgindex][2]);
             $xlImgTit.html(imgtitEllipsis(xlphoto[xlimgindex][1])).attr('title',xlphoto[xlimgindex][1]);
             $xlphotospageTimestamp.text(xlphoto[xlimgindex][5]).prev().find('a').text(xlphoto[xlimgindex][4]).attr('title',xlphoto[xlimgindex][4]).end().parent().prev().find('img').attr('src',xlphoto[xlimgindex][3]);
-            $xlphotospageListli.removeAttr('class').eq(xlimgindex).addClass('xl-photospage-current');
+            $xlphotospageListli.removeAttr('class').slice(xlimgindex).addClass('xl-photospage-current');
             resizeLayout();
             disabledIcon();
             xlimgoriginalwidth=xlimgwidth,xlimgoriginalheight=xlimgheight;
@@ -179,7 +179,7 @@ $(function (){
         };
         var listmaxpageImg=function (maxpage,page){
             maxpage===page ? $xlphotospageListprve.next().next().addClass(xlbtndisabled) : $xlphotospageListprve.next().next().removeClass(xlbtndisabled);
-            maxpage>=page&&page!=1 ? $xlphotospageListprve.removeClass(xlbtndisabled) : $xlphotospageListprve.addClass(xlbtndisabled);
+            maxpage>=page&&page!==1 ? $xlphotospageListprve.removeClass(xlbtndisabled) : $xlphotospageListprve.addClass(xlbtndisabled);
         };
         var directionList=function (direction){
             if(direction==='next'){
@@ -213,9 +213,9 @@ $(function (){
             listmaxpageImg(xllistmaxpage,xllistpage);
         };
         var directionLast=function (){
-            if(xllistnum + xldirectionnum === xlimgindex+1 && xlimgindex+1 >= xllistnum&&xllistpage!=xllistmaxpage)
+            if(xllistnum + xldirectionnum === xlimgindex+1 && xlimgindex+1 >= xllistnum&&xllistpage!==xllistmaxpage)
                 directionList('next');
-            if((8 + (xldirectionnum-7) === xlimgindex+1 && xllistpage!==1 &&xllistpage!=xllistmaxpage)||(xlphotolength-xllistnum+1===xlimgindex+1&&xllistpage===xllistmaxpage))
+            if((8 + (xldirectionnum-7) === xlimgindex+1 && xllistpage!==1 &&xllistpage!==xllistmaxpage)||(xlphotolength-xllistnum+1===xlimgindex+1&&xllistpage===xllistmaxpage))
                 directionList('prev');
         };
         processImg();
@@ -417,7 +417,7 @@ $(function (){
                         if(getfullscreenelement()){
                             var nohover;
                             if($xlphotospageImgarea.hasClass('above')){
-                                if(!$xlphotospagePrev.is(":animated"))
+                                if(!$xlphotospagePrev.is(':animated'))
                                     $($hoverEle).fadeOut();
                             }else{
                                 for(var i=0;i<$hoverEle.length;i++){
@@ -446,7 +446,7 @@ $(function (){
                         if(win.height()-130>e.originalEvent.pageY){
                             $xlphotospageImgarea.removeClass('above');
                         }
-                        if(!$xlphotospageNext.next().is(":animated")){
+                        if(!$xlphotospageNext.next().is(':animated')){
                             $xlphotospageNext.next().fadeIn();
                             $($hoverEle).fadeIn();
                         }
@@ -458,7 +458,7 @@ $(function (){
                     if(isshowimglist)
                         $xlphotospageshowimglist.click();
                     $xlphotospagefullious.off('mouseover').prev().prev().find('div,a').removeAttr('style');
-                    $xlphotospageImgarea.off("mouseenter").off("mousemove").parent().parent().removeClass('xl-imgarea-fullscreen');
+                    $xlphotospageImgarea.off('mouseenter').off('mousemove').parent().parent().removeClass('xl-imgarea-fullscreen');
                 }
                 resizeLayout();
             }, 200);
