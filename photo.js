@@ -1,10 +1,10 @@
 /**
- * photo.js v2.2.5
+ * photo.js v2.2.6
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
 $(function (){
-    var root = document.documentElement,timer,$xlphotoli=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=ismove=iszoom=isrotate=isdrag=isshowimglist=false,xlphoto=xlicon=xlicontitle=[];
+    var root=document.documentElement,timer,$xlphotoli=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=ismove=iszoom=isrotate=isdrag=isshowimglist=false,xlphoto=xlicon=xlicontitle=[];
     $('.xl-backtotop').css('margin-left','720px');
     var getreqfullscreen=function (){
         return root.requestFullscreen || root.webkitRequestFullscreen || root.mozRequestFullScreen || root.msRequestFullscreen;
@@ -27,9 +27,8 @@ $(function (){
         i<8 ? xltoolbar+='<a class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'" title="'+ xlicontitle[i] +'"></a>' : xlhandletab+='<li title="'+ xlicontitle[i] +'"><a class="xl-photospage-tab-btn xl-photospage-'+ xlicon[i] +'-btn"><i class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'"></i></a></li>';
     }
     $xlphotoli.on('click','.xl-photo-img',function (){
-        xlimgindex = $(this).parent().index(),xlrotater = 0,xlphotolength=xlphoto.length,xlbtndisabled='xl-photospage-imgdisabled';
-        html.css('overflow','hidden').not('html').append('<div id="xl-mask" class="xl-mask"></div><div id="xl-photospage" class="xl-photospage"><div class="xl-photospage-main"></div></div>'); 
-        $xlMask=$('#xl-mask');$xlPhotospage=$('#xl-photospage'),$xlphotospageMain=$xlPhotospage.find('div.xl-photospage-main');
+        html.css('overflow','hidden').not('html').append('<div id="xl-mask" class="xl-mask"></div><div id="xl-photospage" class="xl-photospage"><div class="xl-photospage-main"></div></div>');
+        xlimgindex=$(this).parent().index(),xlrotater=0,xlphotolength=xlphoto.length,xlbtndisabled='xl-photospage-imgdisabled',$xlMask=$('#xl-mask');$xlPhotospage=$xlMask.next(),$xlphotospageMain=$xlPhotospage.find('div.xl-photospage-main');
         var imgtitEllipsis=function (xlphototit){
             return xlphototit.length <= 18 ? xlphototit + '<em> - ' + (xlimgindex+1) + ' / ' + xlphotolength + '</em>' : xlphototit.substring(0,18) + '<em>… - ' + (xlimgindex+1) + ' / ' + xlphotolength + '</em>';
         };
@@ -56,12 +55,12 @@ $(function (){
         var resizeLayout=function (){
             xlimgareawidth=win.width()-500,xlimgareaheight=win.height()-50,xlimgwidth=$xlphotospageImg.width(),xlimgheight=$xlphotospageImg.height();
             var ratio;
-            if(!ismove&&xlimgheight>xlimgareaheight){
+            if(!ismove && xlimgheight > xlimgareaheight){
                 ratio=xlimgareaheight/xlimgheight;
                 xlimgheight=xlimgareaheight-34;
                 xlimgwidth=xlimgwidth*ratio-34;
             }
-            if(!ismove&&xlimgwidth>xlimgareawidth){
+            if(!ismove && xlimgwidth > xlimgareawidth){
                 ratio=xlimgareawidth/xlimgwidth;
                 xlimgwidth=xlimgareawidth;
                 xlimgheight*=ratio;
@@ -69,7 +68,7 @@ $(function (){
             xlimgareawidth+300<=1250 ? $xlImgTit.next().hide() : $xlImgTit.next().show();
             $xlphotospageMain.css({'width':xlimgareawidth+300,'height':xlimgareaheight}).parent().fadeTo(300,1);
             $xlphotospageImgarea.removeAttr('style').width(xlimgareawidth);
-            if(!ismove&&$xlPhotospage.hasClass('xl-imgarea-fullscreen'))
+            if(!ismove && $xlPhotospage.hasClass('xl-imgarea-fullscreen'))
                 xlimgareawidth+=500,xlimgareaheight+50;
             $xlphotospageImg.css({'width':xlimgwidth,'height':xlimgheight,'top':(xlimgareaheight-xlimgheight-34) / 2,'left':(xlimgareawidth-xlimgwidth) / 2,'opacity':'1'});
             if($.browser.msie&&($.browser.version === '6.0')){
@@ -88,14 +87,14 @@ $(function (){
                 $xlPhotospage.removeClass('xl-photospage-mobile');
             }
             xllistnum=Math.round((xlimgareawidth-60) / 61),xllistmaxpage=Math.round((xlphotolength-xllistnum) / 7+1);
-            if(xllistmaxpage<1)
+            if(xllistmaxpage < 1)
                 xllistmaxpage=1;
             if(!isfirst){
                 isfirst=true,xllistpage=1,xldirectionnum=0;
-                while(xlimgindex+1>=xllistnum+xldirectionnum&&xllistpage!==xllistmaxpage&&xlimgindex+1>xllistnum)
+                while(xlimgindex+1 >= xllistnum+xldirectionnum && xllistpage !== xllistmaxpage && xlimgindex+1 > xllistnum)
                     xllistpage++,xldirectionnum+=7;
-                xllistpage!==xllistmaxpage ? listprocess(xllistpage) : listmoveLast();
-                $xlphotospageListli.removeAttr('class').slice(xlimgindex).addClass('xl-photospage-current').parent().width(xlphotolength*61);
+                xllistpage !== xllistmaxpage ? listprocess(xllistpage) : listmoveLast();
+                $xlphotospageListli.removeAttr('class').eq(xlimgindex).addClass('xl-photospage-current').parent().width(xlphotolength*61);
             }
             listmaxpageImg(xllistmaxpage,xllistpage);
             dom.off('mousemove mouseup');
@@ -104,7 +103,7 @@ $(function (){
             $xlphotospageList.stop().animate({marginLeft:-7*(page-1)*61});
         };
         var listmoveLast=function (){
-            if(xllistmaxpage!==1){
+            if(xllistmaxpage !== 1){
                 $xlphotospageList.stop().animate({marginLeft:-((xlphotolength-xllistnum)*61+30)});
                 xllistpage=xllistmaxpage,xldirectionnum=(xllistmaxpage-1)*7;
             }
@@ -118,9 +117,9 @@ $(function (){
         var directionImg=function (index){
             xlimgindex+=index;
             if(xlimgindex === xlphotolength)
-                xlimgindex = 0;
+                xlimgindex=0;
             if(xlimgindex === -1)
-                xlimgindex = xlphotolength-1;
+                xlimgindex=xlphotolength-1;
             rerotateimg();
             originalimg();
         };
@@ -147,7 +146,7 @@ $(function (){
             $xlphotospageContent.find('h1').text(xlphoto[xlimgindex][1]).end().find('p').text(xlphoto[xlimgindex][2]);
             $xlImgTit.html(imgtitEllipsis(xlphoto[xlimgindex][1])).attr('title',xlphoto[xlimgindex][1]);
             $xlphotospageTimestamp.text(xlphoto[xlimgindex][5]).prev().find('a').text(xlphoto[xlimgindex][4]).attr('title',xlphoto[xlimgindex][4]).end().parent().prev().find('img').attr('src',xlphoto[xlimgindex][3]);
-            $xlphotospageListli.removeAttr('class').slice(xlimgindex).addClass('xl-photospage-current');
+            $xlphotospageListli.removeAttr('class').eq(xlimgindex).addClass('xl-photospage-current');
             resizeLayout();
             disabledIcon();
             xlimgoriginalwidth=xlimgwidth,xlimgoriginalheight=xlimgheight;
@@ -165,12 +164,12 @@ $(function (){
             iszoom=true,xlimgwidth=$xlphotospageImg.width(),xlimgheight=$xlphotospageImg.height();
             $xlphotospageImg.parent().css('background','#000');
             var targetwidth=size*xlimgwidth,targetheight=size*xlimgheight;
-            if(size>1){
-                if(targetwidth>xlimgoriginalwidth*10){
+            if(size > 1){
+                if(targetwidth > xlimgoriginalwidth*10){
                     return !stateImg('已放到最大');
                 }
             }else{
-                if(targetwidth<xlimgoriginalwidth/10)
+                if(targetwidth < xlimgoriginalwidth/10)
                     return !stateImg('已缩到最小');
             }
             $xlphotospageImg.css({'width':targetwidth,'height':targetheight}).offset({'top':$xlphotospageImg.offset().top-(targetheight-xlimgheight)/2,'left':$xlphotospageImg.offset().left-(targetwidth-xlimgwidth)/2});
@@ -178,18 +177,18 @@ $(function (){
             disabledIcon();
         };
         var listmaxpageImg=function (maxpage,page){
-            maxpage===page ? $xlphotospageListprve.next().next().addClass(xlbtndisabled) : $xlphotospageListprve.next().next().removeClass(xlbtndisabled);
-            maxpage>=page&&page!==1 ? $xlphotospageListprve.removeClass(xlbtndisabled) : $xlphotospageListprve.addClass(xlbtndisabled);
+            maxpage === page ? $xlphotospageListprve.next().next().addClass(xlbtndisabled) : $xlphotospageListprve.next().next().removeClass(xlbtndisabled);
+            maxpage >= page && page !== 1 ? $xlphotospageListprve.removeClass(xlbtndisabled) : $xlphotospageListprve.addClass(xlbtndisabled);
         };
         var directionList=function (direction){
-            if(direction==='next'){
-                if(xllistpage===xllistmaxpage){
+            if(direction === 'next'){
+                if(xllistpage === xllistmaxpage){
                     xllistpage=xllistmaxpage;
                     if(!$xlphotospageList.is(':animated'))
                         stateImg('已是最后一页啦');
                     return false;
                 }else{
-                    if(xllistpage+1===xllistmaxpage)
+                    if(xllistpage+1 === xllistmaxpage)
                         listmoveLast();
                     else{
                         xldirectionnum+=7,xllistpage++;
@@ -197,13 +196,13 @@ $(function (){
                     }
                 }
             }else{
-                if(xllistpage===1){
+                if(xllistpage === 1){
                     if(!$xlphotospageList.is(':animated'))
                         stateImg('已是第一页啦');
                     xldirectionnum=0;
                     return false;
                 }
-                if(xllistpage<=0){
+                if(xllistpage <= 0){
                     xllistpage=1;
                 }else{
                     xldirectionnum-=7,xllistpage--;
@@ -213,30 +212,30 @@ $(function (){
             listmaxpageImg(xllistmaxpage,xllistpage);
         };
         var directionLast=function (){
-            if(xllistnum + xldirectionnum === xlimgindex+1 && xlimgindex+1 >= xllistnum&&xllistpage!==xllistmaxpage)
+            if(xllistnum + xldirectionnum === xlimgindex+1 && xlimgindex+1 >= xllistnum && xllistpage !== xllistmaxpage)
                 directionList('next');
-            if((8 + (xldirectionnum-7) === xlimgindex+1 && xllistpage!==1 &&xllistpage!==xllistmaxpage)||(xlphotolength-xllistnum+1===xlimgindex+1&&xllistpage===xllistmaxpage))
+            if((8 + (xldirectionnum-7) === xlimgindex+1 && xllistpage !== 1 && xllistpage !== xllistmaxpage) || (xlphotolength-xllistnum+1 === xlimgindex+1&&xllistpage === xllistmaxpage))
                 directionList('prev');
         };
         processImg();
         $xlphotospageImg.on('mousedown',function (e){
-            if(e.which===1){
-                isdrag = !isdrag;
+            if(e.which === 1){
+                isdrag=!isdrag;
                 var xlimgx,xlimgy;
                 if((xlrotater/90)%4 === 0)
-                    xlimgx = e.originalEvent.pageX - $xlphotospageImg.position().left,xlimgy = e.originalEvent.pageY - $xlphotospageImg.position().top
+                    xlimgx=e.originalEvent.pageX-$xlphotospageImg.position().left,xlimgy=e.originalEvent.pageY-$xlphotospageImg.position().top
                 else
-                    xlimgx = e.originalEvent.pageX - $xlphotospageImg.offset().left,xlimgy = e.originalEvent.pageY - $xlphotospageImg.offset().top;
+                    xlimgx=e.originalEvent.pageX-$xlphotospageImg.offset().left,xlimgy=e.originalEvent.pageY-$xlphotospageImg.offset().top;
                 dom.on('mousemove',function (e){
                     ismove=true;
                     disabledIcon();
                     (xlrotater/90)% 4 === 0 ? $xlphotospageImg.css({'top':e.originalEvent.pageY - xlimgy,'left':e.originalEvent.pageX - xlimgx}) : $xlphotospageImg.offset({'top':e.originalEvent.pageY - xlimgy,'left':e.originalEvent.pageX - xlimgx});
                 }).on('mouseup',function (){
                     var xlimgleft=$xlphotospageImg.position().left,xlimgtop=$xlphotospageImg.position().top;
-                    if(xlimgtop<-xlimgheight+50||xlimgleft<-xlimgwidth+40&&(xlrotater/90)% 4 === 0||xlimgleft>xlimgareawidth-40||xlimgtop>xlimgareaheight-110||xlimgleft<-xlimgheight+40&&(xlrotater/90)% 4 !== 0)
+                    if(xlimgtop < -xlimgheight+50 || xlimgleft < -xlimgwidth+40 && (xlrotater/90)% 4 === 0 || xlimgleft > xlimgareawidth-40 || xlimgtop > xlimgareaheight-110 || xlimgleft < -xlimgheight+40 && (xlrotater/90)% 4 !== 0)
                         return false;
                     else{
-                        isdrag = !isdrag;
+                        isdrag=!isdrag;
                         dom.off('mousemove mouseup');
                     }
                 });
@@ -249,16 +248,16 @@ $(function (){
             if($.browser.msie&&$.browser.version === '6.0')
                 return false;
             if(!isdrag){
-                var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||(e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));
+                var delta=(e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));
                 delta > 0 ? xlphotospageimgLimit(1.1) : xlphotospageimgLimit(0.9);
             }
         });
         $xlPhotospage.on('click',function (e){
-            var target = e.target;
+            var target=e.target;
             switch(target){
                 case $xlphotospageClose[0] :
                     isfirst=!isfirst;
-                    if(!($.browser.msie&&($.browser.version < '9.0'||$.browser.version === '10.0'))){
+                    if(!($.browser.msie&&($.browser.version < '9.0' || $.browser.version === '10.0'))){
                         $xlMask.fadeTo(300,0,function (){
                             $(this).detach();
                         }).next().fadeTo(250,0,function (){
@@ -277,7 +276,7 @@ $(function (){
                     processImg();
                     break;
                 case $xlphotospageNext[0] :
-                    if(xlimgindex+1===xlphotolength){
+                    if(xlimgindex+1 === xlphotolength){
                         xldirectionnum=0,xllistpage=1;
                         listprocess(xllistpage);
                     }
@@ -327,8 +326,6 @@ $(function (){
                             ismove=false;
                             disabledIcon();
                         }
-                        $xlphotospageImg.css({'width':xlphoto[xlimgindex][3],'height':xlphoto[xlimgindex][4]});
-                        win.resize();
                     }else{
                         stateImg('浏览器不支持全屏');
                     }
@@ -360,14 +357,14 @@ $(function (){
             $xlphotospageClose.click();
         });
         $xlphotospageList.on('click','a',function (){
-            xlimgindex = $(this).parent().index();
+            xlimgindex=$(this).parent().index();
             directionLast();
             processImg();
             rerotateimg();
             return !originalimg();
         });
         dom.on('keyup',function (event){
-            var code = event.keyCode || event.which || event.charCode;
+            var code=event.keyCode || event.which || event.charCode;
             switch(code){
                 case 27 :
                     if($xlPhotospage.hasClass('xl-imgarea-fullscreen'))
@@ -375,7 +372,7 @@ $(function (){
                     $xlphotospageClose.click();
                     break;
                 case 37 :
-                    if(xlimgindex!==0)
+                    if(xlimgindex !== 0)
                         $xlphotospagePrev.click();
                     break;
                 case 38 :
@@ -398,9 +395,9 @@ $(function (){
             return false;
         });
         win.on('resize',function (){
-            if (timer)
+            if(timer)
                 timer&&clearTimeout(timer);
-            timer = setTimeout(function (){
+            timer=setTimeout(function (){
                 var $xlphotospagefullious=$('.xl-photospage-fullscreen-ious'),$hoverEle=[$xlphotospagePrev[0],$xlphotospageNext[0]];
                 if(getfullscreenelement()){
                     if(isshowimglist){
@@ -413,7 +410,7 @@ $(function (){
                             // $xlphotospageshowimglist.parent().css('bottom','30px');
                         }, 1750);
                     }
-                    var onmousestop = function (){
+                    var onmousestop=function (){
                         if(getfullscreenelement()){
                             var nohover;
                             if($xlphotospageImgarea.hasClass('above')){
@@ -443,7 +440,7 @@ $(function (){
                                 $xlphotospageImgarea.addClass('above');
                             }
                         });
-                        if(win.height()-130>e.originalEvent.pageY){
+                        if(win.height()-130 > e.originalEvent.pageY){
                             $xlphotospageImgarea.removeClass('above');
                         }
                         if(!$xlphotospageNext.next().is(':animated')){
@@ -451,7 +448,7 @@ $(function (){
                             $($hoverEle).fadeIn();
                         }
                         thread&&clearTimeout(thread);
-                        thread = setTimeout(onmousestop, 1750);
+                        thread=setTimeout(onmousestop, 1750);
                     });
                     $xlPhotospage.addClass('xl-imgarea-fullscreen');
                 }else{
@@ -460,6 +457,7 @@ $(function (){
                     $xlphotospagefullious.off('mouseover').prev().prev().find('div,a').removeAttr('style');
                     $xlphotospageImgarea.off('mouseenter').off('mousemove').parent().parent().removeClass('xl-imgarea-fullscreen');
                 }
+                $xlphotospageImg.css({'width':xlimgoriginalwidth,'height':xlimgoriginalheight});
                 resizeLayout();
             }, 200);
         });
