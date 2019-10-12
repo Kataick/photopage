@@ -1,10 +1,10 @@
 /**
- * photo.js v2.2.6
+ * photo.js v2.2.7
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
 $(function (){
-    var root=document.documentElement,timer,$xlphotoli=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=ismove=iszoom=isrotate=isdrag=isshowimglist=false,xlphoto=xlicon=xlicontitle=[];
+    var root=document.documentElement,timer,$xlgallery=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=ismove=iszoom=isrotate=isdrag=isshowimglist=false,xlphoto=xlicon=xlicontitle=[];
     $('.xl-backtotop').css('margin-left','720px');
     var getreqfullscreen=function (){
         return root.requestFullscreen || root.webkitRequestFullscreen || root.mozRequestFullScreen || root.msRequestFullscreen;
@@ -15,7 +15,7 @@ $(function (){
     var getexitfullscreen=function (){
         return document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
     };
-    $xlphotoli.each(function (i){
+    $xlgallery.each(function (i){
         var $xlphoto=$(this);
         $xlphototitle=$xlphoto.find('h1'),$xlphotouser=$xlphoto.find('a');
         xlphoto[i]=[$xlphototitle.prev().find('img')[0].src,$xlphototitle.text(),$xlphototitle.next().text(),$xlphotouser.parent().prev()[0].src,$xlphotouser.text(),$xlphotouser.parent().next().text()];
@@ -26,7 +26,7 @@ $(function (){
     for(var i=0;i<xlicon.length;i++){
         i<8 ? xltoolbar+='<a class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'" title="'+ xlicontitle[i] +'"></a>' : xlhandletab+='<li title="'+ xlicontitle[i] +'"><a class="xl-photospage-tab-btn xl-photospage-'+ xlicon[i] +'-btn"><i class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'"></i></a></li>';
     }
-    $xlphotoli.on('click','.xl-photo-img',function (){
+    $xlgallery.on('click','.xl-photo-img',function (){
         html.css('overflow','hidden').not('html').append('<div id="xl-mask" class="xl-mask"></div><div id="xl-photospage" class="xl-photospage"><div class="xl-photospage-main"></div></div>');
         xlimgindex=$(this).parent().index(),xlrotater=0,xlphotolength=xlphoto.length,xlbtndisabled='xl-photospage-imgdisabled',$xlMask=$('#xl-mask');$xlPhotospage=$xlMask.next(),$xlphotospageMain=$xlPhotospage.find('div.xl-photospage-main');
         var imgtitEllipsis=function (xlphototit){
@@ -70,7 +70,7 @@ $(function (){
             $xlphotospageImgarea.removeAttr('style').width(xlimgareawidth);
             if(!ismove && $xlPhotospage.hasClass('xl-imgarea-fullscreen'))
                 xlimgareawidth+=500,xlimgareaheight+50;
-            $xlphotospageImg.css({'width':xlimgwidth,'height':xlimgheight,'top':(xlimgareaheight-xlimgheight-34) / 2,'left':(xlimgareawidth-xlimgwidth) / 2,'opacity':'1'});
+            $xlphotospageImg.css({'width':xlimgwidth,'height':xlimgheight,'top':(xlimgareaheight-xlimgheight-34) / 2,'left':(xlimgareawidth-xlimgwidth) / 2}).stop().fadeTo(500,1);
             if($.browser.msie&&($.browser.version === '6.0')){
                 $xlphotospageContent.parent().css('margin-left',xlimgareawidth+15);
                 $xlPhotospage.css('top',dom.scrollTop()+25);
@@ -142,7 +142,7 @@ $(function (){
         var processImg=function (){
             ismove=false;
             $('.xl-photospage-download-btn').attr('href',xlphoto[xlimgindex][0]);
-            $xlphotospageImg.attr('src',xlphoto[xlimgindex][0]).css({width:"", height:""}).parent().removeAttr('style');
+            $xlphotospageImg.attr('src',xlphoto[xlimgindex][0]).css({'opacity':"",width:"", height:""}).parent().removeAttr('style');
             $xlphotospageContent.find('h1').text(xlphoto[xlimgindex][1]).end().find('p').text(xlphoto[xlimgindex][2]);
             $xlImgTit.html(imgtitEllipsis(xlphoto[xlimgindex][1])).attr('title',xlphoto[xlimgindex][1]);
             $xlphotospageTimestamp.text(xlphoto[xlimgindex][5]).prev().find('a').text(xlphoto[xlimgindex][4]).attr('title',xlphoto[xlimgindex][4]).end().parent().prev().find('img').attr('src',xlphoto[xlimgindex][3]);
@@ -318,6 +318,7 @@ $(function (){
                         break;
                     }
                     originalimg();
+                    stateImg('100%');
                     break;
                 case $xlImgoriginal.next()[0] :
                     if(getreqfullscreen()){
