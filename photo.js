@@ -1,10 +1,10 @@
 /**
- * photo.js v2.2.7
+ * photo.js v2.2.8
  * @author KkakaMann
  * @mailto KkakaMann24@gmail.com  KkakaMann@163.com
  */
 $(function (){
-    var root=document.documentElement,timer,$xlgallery=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=ismove=iszoom=isrotate=isdrag=isshowimglist=false,xlphoto=xlicon=xlicontitle=[];
+    var root=document.documentElement,timer,$xlgallery=$('.xl-photo li'),$xlMask,$xlPhotospage,$xlphotospageMain,$xlphotospageImgarea,$xlphotospageState,$xlphotospageImg,$xlphotospageClose,$xlphotospagePrev,$xlphotospageNext,$xlphotospageContent,$xlImgTit,$xlImgleftrotate,$xlImgrerotate,$xlImgoriginal,$xlphotospageTimestamp,$xlphotospageList,$xlphotospageListprve,$xlphotospageListli,$xlphototitle,$xlphotouser,$xlphotospageshowimglist,xlphotolength,xlimgwidth,xlimgoriginalwidth,xlimgheight,xlimgareawidth,xlimgareaheight,xlimgoriginalheight,xlimgindex,xlbtndisabled,xlrotater,xllistpage,xllistmaxpage,xllistnum,xldirectionnum,xllistcontent=xltoolbar=xlhandletab='',isfirst=ismove=iszoom=isrotate=isdrag=isshowimglist=false,xlphoto=xlicon=xlicontitle=[];
     $('.xl-backtotop').css('margin-left','720px');
     var getreqfullscreen=function (){
         return root.requestFullscreen || root.webkitRequestFullscreen || root.mozRequestFullScreen || root.msRequestFullscreen;
@@ -15,16 +15,16 @@ $(function (){
     var getexitfullscreen=function (){
         return document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
     };
-    $xlgallery.each(function (i){
-        var $xlphoto=$(this);
+    xlicon=['remove','leftrotate','rightrotate','rerotate','zoomin','zoomout','original','fullscreen','like','comment','keep','download'];
+    xlicontitle=['当前图片位置已居中','向左旋转90° (L)','向右旋转90° (R)','当前已显示实际方向','放大 (↑)','缩小 (↓)','当前已显示实际大小','全屏浏览','点赞','评论','收藏','保存原图到电脑'];
+    for(var i=0;i<$xlgallery.length;i++){
+        var $xlphoto=$xlgallery.eq(i);
         $xlphototitle=$xlphoto.find('h1'),$xlphotouser=$xlphoto.find('a');
         xlphoto[i]=[$xlphototitle.prev().find('img')[0].src,$xlphototitle.text(),$xlphototitle.next().text(),$xlphotouser.parent().prev()[0].src,$xlphotouser.text(),$xlphotouser.parent().next().text()];
         xllistcontent+='<li><a><img src="'+ xlphoto[i][0] +'" title="'+ xlphoto[i][1] +'" /></a></li>';
-    });
-    xlicon=['remove','leftrotate','rightrotate','rerotate','zoomin','zoomout','original','fullscreen','like','comment','keep','download'];
-    xlicontitle=['当前图片位置已居中','向左旋转90°','向右旋转90°','当前已显示实际方向','放大','缩小','当前已显示实际大小','全屏浏览','点赞','评论','收藏','保存原图到电脑'];
-    for(var i=0;i<xlicon.length;i++){
-        i<8 ? xltoolbar+='<a class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'" title="'+ xlicontitle[i] +'"></a>' : xlhandletab+='<li title="'+ xlicontitle[i] +'"><a class="xl-photospage-tab-btn xl-photospage-'+ xlicon[i] +'-btn"><i class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'"></i></a></li>';
+    }
+    for(i=0;i<xlicon.length;i++){
+        i<8 ? xltoolbar+='<a class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'"></a>' : xlhandletab+='<li title="'+ xlicontitle[i] +'"><a class="xl-photospage-tab-btn xl-photospage-'+ xlicon[i] +'-btn"><i class="xl-photospage-icon xl-ps-icon-'+ xlicon[i] +'"></i></a></li>';
     }
     $xlgallery.on('click','.xl-photo-img',function (){
         html.css('overflow','hidden').not('html').append('<div id="xl-mask" class="xl-mask"></div><div id="xl-photospage" class="xl-photospage"><div class="xl-photospage-main"></div></div>');
@@ -32,7 +32,7 @@ $(function (){
         var imgtitEllipsis=function (xlphototit){
             return xlphototit.length <= 18 ? xlphototit + '<em> - ' + (xlimgindex+1) + ' / ' + xlphotolength + '</em>' : xlphototit.substring(0,18) + '<em>… - ' + (xlimgindex+1) + ' / ' + xlphotolength + '</em>';
         };
-        $xlphotospageMain.prepend('<div class="xl-photospage-imgarea"><div class="xl-photospage-state"></div><a class="xl-photospage-icon xl-ps-icon-fullscreenclose" title="退出全屏"></a><div class="xl-photospage-img"><img /></div><div class="xl-photospage-imgsee"><a class="xl-photospage-icon xl-ps-icon-prevphoto"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><a class="xl-photospage-icon xl-ps-icon-nextphoto"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><div class="xl-photospage-imgbar"><a class="xl-photospage-showimglist" title="隐藏图片列表">隐藏图片列表</a><span class="xl-photospage-imgtit"></span><div class="xl-photospage-tool">'+ xltoolbar +'</div></div></div><div class="xl-photospage-imglist"><a class="xl-photospage-icon xl-ps-icon-listprve"></a><div class="xl-photospage-imglist-list clearfix" ><ul>'+ xllistcontent +'</ul></div><a class="xl-photospage-icon xl-ps-icon-listnext"></a></div><div class="xl-photospage-fullscreen-ious"><div></div></div></div>');
+        $xlphotospageMain.prepend('<div class="xl-photospage-imgarea"><div class="xl-photospage-state"></div><a class="xl-photospage-icon xl-ps-icon-fullscreenclose" title="退出全屏"></a><div class="xl-photospage-img"><img /></div><div class="xl-photospage-imgsee"><a class="xl-photospage-icon xl-ps-icon-prevphoto" title="上一张 (←)"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><a class="xl-photospage-icon xl-ps-icon-nextphoto" title="下一张 (→)"><!--[if IE 6]>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--></a><div class="xl-photospage-imgbar"><a class="xl-photospage-showimglist" title="隐藏图片列表">隐藏图片列表</a><span class="xl-photospage-imgtit"></span><div class="xl-photospage-tool">'+ xltoolbar +'</div></div></div><div class="xl-photospage-imglist"><a class="xl-photospage-icon xl-ps-icon-listprve"></a><div class="xl-photospage-imglist-list clearfix" ><ul>'+ xllistcontent +'</ul></div><a class="xl-photospage-icon xl-ps-icon-listnext"></a></div><div class="xl-photospage-fullscreen-ious"><div></div></div></div>');
         $xlphotospageImgarea=$xlphotospageMain.find('div.xl-photospage-imgarea'),$xlphotospageState=$xlphotospageImgarea.find('div.xl-photospage-state'),$xlphotospageImg=$xlphotospageImgarea.find('div.xl-photospage-img img'),$xlphotospagePrev=$xlphotospageImgarea.find('a.xl-ps-icon-prevphoto'),$xlphotospageNext=$xlphotospagePrev.next(),$xlphotospageList=$xlphotospageImgarea.find('div.xl-photospage-imglist-list ul'),$xlphotospageListprve=$xlphotospageImgarea.find('a.xl-ps-icon-listprve'),$xlphotospageListli=$xlphotospageList.find('li');
         $xlphotospageImgarea.after('<div class="xl-photospage-intro"><div class="xl-photospage-content"><h1></h1><div class="xl-photospage-handle-tab"><ul class="clearfix">'+ xlhandletab +'</ul></div><div class="xl-photospage-userinfo clearfix"><div class="xl-photospage-user-avatar" onselectstart="return false;"><img alt="上传者头像" /></div><div class="xl-photospage-section"><div class="xl-photospage-user-info"><a href="#"></a></div><div class="xl-photospage-timestamp"></div></div></div><p></p></div></div><div class="xl-photospage-vanish"><a class="xl-photospage-icon xl-ps-icon-close" title="关闭"></a></div>');
         $('.xl-photospage-download-btn').attr('download','');
@@ -120,8 +120,9 @@ $(function (){
                 xlimgindex=0;
             if(xlimgindex === -1)
                 xlimgindex=xlphotolength-1;
-            rerotateimg();
-            originalimg();
+            rerotateImg();
+            processImg();
+            // originalimg();
         };
         var rotateImg=function (rotate){
             xlrotater+=rotate;
@@ -129,14 +130,14 @@ $(function (){
             (xlrotater/90)%4 !== 0 ? isrotate=true : isrotate=false;
             disabledIcon();
         };
-        var rerotateimg=function (){
+        var rerotateImg=function (){
             isrotate=false,xlrotater=0;
             disabledIcon();
             $xlphotospageImg.css({'transform':'','transition':''});
         };
         var originalimg=function (){
             iszoom=false;
-            $xlphotospageImg.css({'width':xlimgoriginalwidth,'height':xlimgoriginalheight,'top':(xlimgareaheight-xlimgoriginalheight-34) / 2,'left':(xlimgareawidth-xlimgoriginalwidth) / 2});
+            $xlphotospageImg.css({'width':xlimgoriginalwidth,'height':xlimgoriginalheight,'top':(xlimgareaheight-xlimgoriginalheight-34)/2,'left':(xlimgareawidth-xlimgoriginalwidth)/2});
             disabledIcon();
         };
         var processImg=function (){
@@ -152,13 +153,12 @@ $(function (){
             xlimgoriginalwidth=xlimgwidth,xlimgoriginalheight=xlimgheight;
         };
         var disabledIcon=function (){
-            var imgDisabled=function (name,type,text){
-                type==='add' ? $(name).addClass(xlbtndisabled) : $(name).removeClass(xlbtndisabled);
-                $(name).attr('title',text);
-            };
-            ismove ? imgDisabled($xlImgleftrotate.prev(),'del','图片居中') : imgDisabled($xlImgleftrotate.prev(),'add','当前图片位置已居中');
-            iszoom ? imgDisabled($xlImgoriginal,'del','实际大小') : imgDisabled($xlImgoriginal,'add','当前已显示实际大小');
-            isrotate ? imgDisabled($xlImgrerotate,'del','还原方向') : imgDisabled($xlImgrerotate,'add','当前已显示实际方向');
+            ismove ? disabledBtn(ismove,$xlImgleftrotate.prev(),'del','图片居中') : disabledBtn(ismove,$xlImgleftrotate.prev(),xlicontitle[0]);
+            iszoom ? disabledBtn(iszoom,$xlImgoriginal,'实际大小') : disabledBtn(iszoom,$xlImgoriginal,xlicontitle[3]);
+            isrotate ? disabledBtn(isrotate,$xlImgrerotate,'还原方向') : disabledBtn(isrotate,$xlImgrerotate,xlicontitle[3]);
+        };
+        var disabledBtn=function (boole,ele,text){
+            boole ? $(ele).removeClass(xlbtndisabled).attr('title',text) : $(ele).addClass(xlbtndisabled).attr('title',text);
         };
         var xlphotospageimgLimit=function (size){
             iszoom=true,xlimgwidth=$xlphotospageImg.width(),xlimgheight=$xlphotospageImg.height();
@@ -249,7 +249,7 @@ $(function (){
                 return false;
             if(!isdrag){
                 var delta=(e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));
-                delta > 0 ? xlphotospageimgLimit(1.1) : xlphotospageimgLimit(0.9);
+                delta > 0 ? $xlImgrerotate.next().click() : $xlImgoriginal.prev().click();
             }
         });
         $xlPhotospage.on('click',function (e){
@@ -273,7 +273,6 @@ $(function (){
                 case $xlphotospagePrev[0] :
                     xlimgindex===0 ? listmoveLast() : directionLast();
                     directionImg(-1);
-                    processImg();
                     break;
                 case $xlphotospageNext[0] :
                     if(xlimgindex+1 === xlphotolength){
@@ -282,7 +281,6 @@ $(function (){
                     }
                     xllistpage===xllistmaxpage ? listmoveLast() : directionLast();
                     directionImg(+1);
-                    processImg();
                     break;
                 case $xlImgleftrotate.prev()[0] :
                     if($xlImgleftrotate.prev().hasClass(xlbtndisabled)){
@@ -304,7 +302,7 @@ $(function (){
                         stateImg('已显示实际方向');
                         break;
                     }
-                    rerotateimg();
+                    rerotateImg();
                     break;
                 case $xlImgrerotate.next()[0] :
                     xlphotospageimgLimit(1.1);
@@ -360,9 +358,9 @@ $(function (){
         $xlphotospageList.on('click','a',function (){
             xlimgindex=$(this).parent().index();
             directionLast();
-            processImg();
-            rerotateimg();
-            return !originalimg();
+            rerotateImg();
+            return !processImg();
+            // originalimg();
         });
         dom.on('keyup',function (event){
             var code=event.keyCode || event.which || event.charCode;
@@ -377,19 +375,19 @@ $(function (){
                         $xlphotospagePrev.click();
                     break;
                 case 38 :
-                    xlphotospageimgLimit(1.1);
+                    $xlImgrerotate.next().click();
                     break;
                 case 39 :
                     $xlphotospageNext.click();
                     break;
                 case 40 :
-                    xlphotospageimgLimit(0.9);
+                    $xlImgoriginal.prev().click()
                     break;
                 case 76 :
-                    rotateImg(-90);
+                    $xlImgleftrotate.click()
                     break;
                 case 82 :
-                    rotateImg(90);
+                    $xlImgleftrotate.next().click();
                     break;
                 default : break;
             }
